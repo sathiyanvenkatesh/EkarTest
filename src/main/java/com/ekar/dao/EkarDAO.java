@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.ekar.entity.RequestDetail;
+import com.ekar.entity.ThreadDetails;
 
 
 
@@ -28,6 +29,12 @@ public class EkarDAO implements IEkarDAO {
 	public void addlog(RequestDetail requestDetail) {
 		// TODO Auto-generated method stub
 		entityManager.persist(requestDetail);
+	}
+
+	@Override
+	public void addthreaddetails(ThreadDetails threadDetails) {
+		entityManager.persist(threadDetails);
+		
 	}
 
 }

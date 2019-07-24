@@ -39,17 +39,6 @@ public class EkarController {
 
 	@Autowired
 	private IEkarService ekarService;
-	
-	@Autowired
-	private ConsumerThread ct;
-	
-	@Autowired
-	private ProducerThread pt;
-	
-	//@Autowired
-	//private AsynchronousService asyserv;//using Async method 
-	
-
 	@GetMapping("Ping")
 	public ResponseEntity<String> hello() {
 		return new ResponseEntity<>("Pong!", HttpStatus.OK);
@@ -58,31 +47,15 @@ public class EkarController {
 
 	@ApiOperation(value = "Add Thredcount param")
 	@PostMapping("increasethread")
-	public ResponseEntity<Void> createlog(@RequestBody RequestDetail  reqdetails){
-		
+	public ResponseEntity<String> createlog(@RequestBody RequestDetail  reqdetails){
+		logger.info("Producerthreadcoun from input-----"+reqdetails.getProducerCount());
+		logger.info("Consumer Threadcount from input------"+reqdetails.getConsumerCount());
 		boolean flag =ekarService.createLog(reqdetails);
 		
 		if (flag == false) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>("Not Added to DB ",HttpStatus.CONFLICT);
 		}
-		//asyserv.executeAsynchronously();
-		logger.info("Producerthreadcoun from input"+reqdetails.getProducerCount());
-		//ApplicationContext ap =new ApplicationContext(Ekarconfiguration.class);
-		Thread[] poducerthread = new Thread [reqdetails.getProducerCount()];//amount of threads
-        for(int b =0; b < poducerthread.length; b++){
-       	 poducerthread[b] = new Thread(pt);
-       	 poducerthread[b].start();
-        }
-
-        
-        Thread[] consumerthread = new Thread [reqdetails.getConsumerCount()];//amount of threads
-        for(int c =0; c< consumerthread.length; c++){
-       	 consumerthread[c] = new Thread(ct);
-       	 consumerthread[c].start();
-        }
 		
-		
-		HttpHeaders headers = new HttpHeaders();			
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<>("Created", HttpStatus.CREATED);
 	}
 }
